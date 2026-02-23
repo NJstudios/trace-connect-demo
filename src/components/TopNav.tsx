@@ -1,7 +1,8 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Building2, Sparkles, Layers, DollarSign } from "lucide-react";
 import { Button } from "./ui";
+import { startTour } from "../lib/tour";
 
 function LinkItem({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) {
   return (
@@ -20,6 +21,7 @@ function LinkItem({ to, icon, label }: { to: string; icon: React.ReactNode; labe
 
 export default function TopNav() {
   const loc = useLocation();
+  const nav = useNavigate();
   const inApp = loc.pathname.startsWith("/app");
   return (
     <div className="sticky top-0 z-50 border-b border-slate-800/70 bg-slate-950/80 backdrop-blur">
@@ -46,7 +48,17 @@ export default function TopNav() {
             <span className="text-slate-500">•</span>
             <span>{inApp ? "App view" : "Marketing view"}</span>
           </div>
-          <Button variant="subtle" onClick={() => window.location.assign("/app/projects")}>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              startTour();
+              nav("/app/projects");
+            }}
+            title="Guided demo tour"
+          >
+            Guided Demo
+          </Button>
+          <Button variant="subtle" onClick={() => nav("/app/projects")}>
             Open Demo App
           </Button>
         </div>

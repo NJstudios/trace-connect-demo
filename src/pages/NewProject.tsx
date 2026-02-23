@@ -8,6 +8,7 @@ import type { TemplateId, Project } from "../types";
 import { generateModel, generateSchedule, generateMaterials, generateRisks, templateLabel } from "../seed";
 import { upsertProject } from "../lib/storage";
 import { isoToday, addDaysIso } from "../lib/date";
+import { getTourStep, setTourStep, endTour } from "../lib/tour";
 
 function uid(prefix: string): string {
   return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
@@ -18,6 +19,8 @@ const STEPS = ["Project", "Blueprint", "Generate", "Review"];
 export default function NewProject() {
   const nav = useNavigate();
   const [step, setStep] = useState(0);
+
+  const tour = getTourStep();
 
   const [name, setName] = useState("New Build");
   const [location, setLocation] = useState("Atlanta, GA");
@@ -75,11 +78,27 @@ export default function NewProject() {
     };
 
     upsertProject(p);
+
+    if (tour) setTourStep("outputs");
     nav(`/app/projects/${p.id}`);
   };
 
   return (
     <div className="space-y-6">
+      {tour === "new" && (
+        <Card className="p-5 border border-sky-400/25">
+          <div className="text-sm font-semibold">Guided demo (Step 2/3)</div>
+          <div className="mt-1 text-sm text-slate-300">
+            Use the wizard to show: template selection → generation → outputs page.
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button variant="subtle" onClick={() => { setStep(1); }}>Go to Blueprint step</Button>
+            <Button onClick={() => { setStep(2); }}>Jump to Generate</Button>
+            <Button variant="ghost" onClick={() => endTour()}>Exit tour</Button>
+          </div>
+        </Card>
+      )}
+
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="text-2xl font-extrabold tracking-tight">New Project</div>

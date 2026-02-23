@@ -40,6 +40,7 @@ export default function ScheduleTable({ startDateIso, tasks }: { startDateIso: s
               <th className="py-2 text-left font-semibold">Owner</th>
               <th className="py-2 text-left font-semibold">Phase</th>
               <th className="py-2 text-left font-semibold">Dates</th>
+              <th className="py-2 text-left font-semibold">Flags</th>
               <th className="py-2 text-left font-semibold">Timeline</th>
             </tr>
           </thead>
@@ -62,15 +63,32 @@ export default function ScheduleTable({ startDateIso, tasks }: { startDateIso: s
                   <td className="py-2 pr-4 text-slate-200">
                     {formatShortDate(start)} → {formatShortDate(end)}
                   </td>
+                  <td className="py-2 pr-4">
+                    <div className="flex flex-wrap gap-1">
+                      {t.critical && <Badge tone="warn">Critical</Badge>}
+                      {t.milestone && <Badge tone="info">Milestone</Badge>}
+                      {!t.critical && !t.milestone && <span className="text-xs text-slate-500">—</span>}
+                    </div>
+                  </td>
                   <td className="py-2">
                     <div className="h-3 w-full rounded-full bg-slate-900/50 border border-slate-800/60 relative overflow-hidden">
                       <div
-                        className={clsx("absolute top-0 h-full rounded-full", "bg-sky-500/60")}
+                        className={clsx(
+                          "absolute top-0 h-full rounded-full",
+                          t.critical ? "bg-amber-400/70" : "bg-sky-500/55"
+                        )}
                         style={{
                           left: `${clamp(leftPct, 0, 100)}%`,
                           width: `${clamp(widthPct, 0, 100)}%`,
                         }}
                       />
+
+                      {t.milestone && (
+                        <div
+                          className="absolute -top-1.5 h-6 w-6 rotate-45 bg-slate-100/80"
+                          style={{ left: `${clamp(leftPct + widthPct - 1, 0, 99)}%` }}
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

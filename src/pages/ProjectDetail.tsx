@@ -9,8 +9,11 @@ import ModelViewer from "../components/ModelViewer";
 import ScheduleTable from "../components/ScheduleTable";
 import MaterialsTable from "../components/MaterialsTable";
 import RiskFlags from "../components/RiskFlags";
+import IntegrationsStrip from "../components/IntegrationsStrip";
+import RevisionTracker from "../components/RevisionTracker";
 import { formatShortDate } from "../lib/date";
 import { formatUSD } from "../lib/money";
+import { getTourStep, endTour } from "../lib/tour";
 
 type TabId = "overview" | "schedule" | "materials" | "risks" | "exports";
 
@@ -25,6 +28,7 @@ export default function ProjectDetail() {
   const { id } = useParams();
   const [project, setProject] = useState<Project | null>(null);
   const [tab, setTab] = useState<TabId>("overview");
+  const tour = getTourStep();
 
   useEffect(() => {
     const p = loadProjects().find(x => x.id === id) ?? null;
@@ -52,6 +56,21 @@ export default function ProjectDetail() {
 
   return (
     <div className="space-y-6">
+      {tour === "outputs" && (
+        <Card className="p-5 border border-sky-400/25">
+          <div className="text-sm font-semibold">Guided demo (Step 3/3)</div>
+          <div className="mt-1 text-sm text-slate-300">
+            This is the money screen: 3D preview + schedule + materials + quantified risks + export/integrations.
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button variant="subtle" onClick={() => setTab("schedule")}>Open Schedule</Button>
+            <Button variant="subtle" onClick={() => setTab("materials")}>Open Materials</Button>
+            <Button variant="subtle" onClick={() => setTab("risks")}>Open Risks</Button>
+            <Button variant="ghost" onClick={() => endTour()}>Finish tour</Button>
+          </div>
+        </Card>
+      )}
+
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <Link to="/app/projects" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-slate-100">
@@ -87,6 +106,14 @@ export default function ProjectDetail() {
       <div className="grid lg:grid-cols-5 gap-4">
         <div className="lg:col-span-3 space-y-4">
           <ModelViewer params={project.model} />
+
+          <Card className="p-4">
+            <div className="text-sm font-semibold">Integrations</div>
+            <div className="mt-2 text-sm text-slate-300">
+              Designed to feed existing toolchains rather than replacing them.
+            </div>
+            <div className="mt-3"><IntegrationsStrip /></div>
+          </Card>
 
           <Card className="p-4">
             <div className="flex items-center gap-2 text-sm font-semibold">
@@ -139,6 +166,8 @@ export default function ProjectDetail() {
 
               <Divider />
 
+              <RevisionTracker />
+
               <div className="text-xs text-slate-400">
                 Judge script: “This page shows the generated 3D model. On the right are the auto-generated schedule and materials list.
                 This is the core of our product.”
@@ -147,7 +176,7 @@ export default function ProjectDetail() {
           )}
 
           {tab === "schedule" && <ScheduleTable startDateIso={project.startDateIso} tasks={project.schedule} />}
-          {tab === "materials" && <MaterialsTable items={project.materials} />}
+          {tab === "materials" && <MaterialsTable items={project.materials} startDateIso={project.startDateIso} />}
           {tab === "risks" && <RiskFlags risks={project.risks} />}
 
           {tab === "exports" && (

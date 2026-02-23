@@ -9,6 +9,12 @@ export interface ScheduleTask {
   durationDays: number;
   owner: "PM" | "Architect" | "Estimator" | "Engineer" | "Field";
   phase: "Design" | "Precon" | "Procurement" | "Construction";
+
+  /** Highlight primary drivers (UI only) */
+  critical?: boolean;
+
+  /** Milestone marker (UI only) */
+  milestone?: boolean;
 }
 
 export interface MaterialLineItem {
@@ -19,6 +25,17 @@ export interface MaterialLineItem {
   unit: "yd³" | "tons" | "ft²" | "lf" | "ea";
   unitCost: number;
   notes?: string;
+
+  /** Optional procurement metadata (demo UI) */
+  vendor?: string;
+  source?: string;
+  sku?: string;
+  leadTimeDays?: number;
+  shipDays?: number;
+  shipMode?: "Local delivery" | "LTL freight" | "Parcel" | "Will-call";
+
+  /** When to order relative to planned start (can be negative) */
+  orderOffsetDays?: number;
 }
 
 export interface RiskFlag {
@@ -26,6 +43,16 @@ export interface RiskFlag {
   severity: "Low" | "Medium" | "High";
   title: string;
   detail: string;
+
+  /** Optional quantified impact (demo UI) */
+  probability?: number; // 0..1
+  delayDaysP50?: number;
+  delayDaysP90?: number;
+  costImpactP50?: number;
+  costImpactP90?: number;
+  mitigation?: string;
+  owner?: "PM" | "Architect" | "Estimator" | "Engineer" | "Field";
+  phase?: "Design" | "Precon" | "Procurement" | "Construction";
 }
 
 export interface ModelParams {

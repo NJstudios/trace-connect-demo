@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Trash2, RefreshCcw, ArrowRight, MapPin } from "lucide-react";
 import { Badge, Button, Card, Divider } from "../components/ui";
 import type { Project } from "../types";
 import { loadProjects, deleteProject, resetDemoData } from "../lib/storage";
 import { templateLabel } from "../seed";
 import { formatShortDate } from "../lib/date";
+import { getTourStep, setTourStep, endTour } from "../lib/tour";
 
 function statusTone(status: Project["status"]) {
   if (status === "Generated") return "ok";
@@ -15,6 +16,8 @@ function statusTone(status: Project["status"]) {
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const nav = useNavigate();
+  const tour = getTourStep();
 
   useEffect(() => setProjects(loadProjects()), []);
 
@@ -26,6 +29,26 @@ export default function Projects() {
 
   return (
     <div className="space-y-6">
+      {tour === "projects" && (
+        <Card className="p-5 border border-sky-400/25">
+          <div className="text-sm font-semibold">Guided demo (Step 1/3)</div>
+          <div className="mt-1 text-sm text-slate-300">
+            Click <span className="kbd">New Project</span> to show the workflow: blueprint/template → generate → outputs.
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              onClick={() => {
+                setTourStep("new");
+                nav("/app/new");
+              }}
+            >
+              Next: New Project
+            </Button>
+            <Button variant="ghost" onClick={() => endTour()}>Exit tour</Button>
+          </div>
+        </Card>
+      )}
+
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="text-2xl font-extrabold tracking-tight">Projects</div>

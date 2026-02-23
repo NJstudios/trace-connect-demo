@@ -10,10 +10,10 @@
 
 .bg-blueprint {
   background-image:
-    radial-gradient(closest-side, rgba(56, 189, 248, 0.10), transparent 70%),
-    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 800px 800px, 48px 48px, 48px 48px;
+    radial-gradient(closest-side, rgba(99, 102, 241, 0.06), transparent 68%),
+    linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+  background-size: 900px 900px, 56px 56px, 56px 56px;
   background-position: 0 0, 0 0, 0 0;
 }
 

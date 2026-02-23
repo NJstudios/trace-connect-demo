@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import type { MaterialLineItem } from "../types";
 import { formatUSD } from "../lib/money";
+import { addDaysIso, formatShortDate } from "../lib/date";
 import { Badge, Card } from "./ui";
 
 function tone(cat: MaterialLineItem["category"]) {
@@ -14,7 +15,13 @@ function tone(cat: MaterialLineItem["category"]) {
   }
 }
 
-export default function MaterialsTable({ items }: { items: MaterialLineItem[] }) {
+export default function MaterialsTable({
+  items,
+  startDateIso,
+}: {
+  items: MaterialLineItem[];
+  startDateIso?: string;
+}) {
   const totals = useMemo(() => {
     const total = items.reduce((sum, it) => sum + it.qty * it.unitCost, 0);
     return { total };
@@ -41,12 +48,22 @@ export default function MaterialsTable({ items }: { items: MaterialLineItem[] })
               <th className="py-2 text-right font-semibold">Qty</th>
               <th className="py-2 text-left font-semibold">Unit</th>
               <th className="py-2 text-right font-semibold">Unit Cost</th>
+              <th className="py-2 text-left font-semibold">Vendor</th>
+              <th className="py-2 text-left font-semibold">Lead/Ship</th>
+              <th className="py-2 text-left font-semibold">Order → ETA</th>
               <th className="py-2 text-right font-semibold">Line Total</th>
             </tr>
           </thead>
           <tbody>
             {items.map((it) => {
               const line = it.qty * it.unitCost;
+              const orderBy = startDateIso && typeof it.orderOffsetDays === "number"
+                ? addDaysIso(startDateIso, it.orderOffsetDays)
+                : null;
+              const eta = orderBy
+                ? addDaysIso(orderBy, (it.leadTimeDays ?? 0) + (it.shipDays ?? 0))
+                : null;
+
               return (
                 <tr key={it.id} className="border-b border-slate-800/50">
                   <td className="py-2 pr-4">
@@ -59,6 +76,27 @@ export default function MaterialsTable({ items }: { items: MaterialLineItem[] })
                   <td className="py-2 pr-4 text-right text-slate-200">{it.qty.toLocaleString()}</td>
                   <td className="py-2 pr-4 text-slate-200">{it.unit}</td>
                   <td className="py-2 pr-4 text-right text-slate-200">{formatUSD(it.unitCost)}</td>
+                  <td className="py-2 pr-4 text-slate-200">
+                    <div className="font-semibold">{it.vendor ?? "—"}</div>
+                    {it.source && <div className="text-xs text-slate-500">{it.source}</div>}
+                  </td>
+                  <td className="py-2 pr-4 text-slate-200">
+                    <div>{typeof it.leadTimeDays === "number" ? `${it.leadTimeDays}d lead` : "—"}</div>
+                    <div className="text-xs text-slate-500">
+                      {typeof it.shipDays === "number" ? `${it.shipDays}d ship` : ""}
+                      {it.shipMode ? ` • ${it.shipMode}` : ""}
+                    </div>
+                  </td>
+                  <td className="py-2 pr-4 text-slate-200">
+                    {orderBy ? (
+                      <>
+                        <div className="font-semibold">{formatShortDate(orderBy)}</div>
+                        <div className="text-xs text-slate-500">ETA {eta ? formatShortDate(eta) : "—"}</div>
+                      </>
+                    ) : (
+                      <div className="text-slate-500">—</div>
+                    )}
+                  </td>
                   <td className="py-2 text-right font-semibold">{formatUSD(line)}</td>
                 </tr>
               );

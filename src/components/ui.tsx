@@ -5,11 +5,11 @@ export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { 
   const { variant = "primary", className, ...rest } = props;
   const base =
     "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition " +
-    "focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 disabled:opacity-50 disabled:cursor-not-allowed";
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50 disabled:opacity-50 disabled:cursor-not-allowed";
   const styles: Record<string, string> = {
-    primary: "bg-sky-500 hover:bg-sky-400 text-slate-950 shadow-soft",
-    subtle: "bg-slate-800/70 hover:bg-slate-800 text-slate-100 border border-slate-700/60",
-    ghost: "bg-transparent hover:bg-slate-800/50 text-slate-100",
+    primary: "bg-slate-100 hover:bg-white text-slate-950 shadow-soft",
+    subtle: "bg-slate-900/35 hover:bg-slate-900/55 text-slate-100 border border-slate-800/70",
+    ghost: "bg-transparent hover:bg-slate-900/35 text-slate-100",
     danger: "bg-rose-500 hover:bg-rose-400 text-slate-950 shadow-soft",
   };
   return <button className={clsx(base, styles[variant], className)} {...rest} />;
@@ -17,7 +17,7 @@ export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { 
 
 export function Card(props: React.HTMLAttributes<HTMLDivElement>) {
   const { className, ...rest } = props;
-  return <div className={clsx("glass rounded-xl2 shadow-soft", className)} {...rest} />;
+  return <div className={clsx("glass rounded-2xl shadow-soft", className)} {...rest} />;
 }
 
 export function Badge(props: React.HTMLAttributes<HTMLSpanElement> & { tone?: "ok" | "warn" | "danger" | "info" }) {
