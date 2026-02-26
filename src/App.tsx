@@ -1,28 +1,19 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Layout from "./components/Layout";
-import Landing from "./pages/Landing";
-import Projects from "./pages/Projects";
-import NewProject from "./pages/NewProject";
-import ProjectDetail from "./pages/ProjectDetail";
+import Shell from "./components/Shell";
+import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
-import About from "./pages/About";
+import Demo from "./pages/Demo";
 
 export default function App() {
   return (
-    <Layout>
+    <Shell>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Home />} />
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/about" element={<About />} />
-
-        <Route path="/app" element={<Navigate to="/app/projects" replace />} />
-        <Route path="/app/projects" element={<Projects />} />
-        <Route path="/app/new" element={<NewProject />} />
-        <Route path="/app/projects/:id" element={<ProjectDetail />} />
-
+        <Route path="/demo" element={<Demo />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Layout>
+    </Shell>
   );
 }

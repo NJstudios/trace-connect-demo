@@ -2,36 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  color-scheme: dark;
+:root {
+  color-scheme: light;
 }
 
-*{ -webkit-tap-highlight-color: transparent; }
+html, body {
+  height: 100%;
+}
 
-.bg-blueprint {
+body {
+  margin: 0;
+  background: #f8fafc; /* slate-50 */
+  color: #0f172a;      /* slate-900 */
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+.bg-grid {
   background-image:
-    radial-gradient(closest-side, rgba(99, 102, 241, 0.06), transparent 68%),
-    linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+    radial-gradient(closest-side, rgba(37, 99, 235, 0.06), transparent 70%),
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
   background-size: 900px 900px, 56px 56px, 56px 56px;
   background-position: 0 0, 0 0, 0 0;
 }
 
-.glass {
-  background: rgba(2, 6, 23, 0.55);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
+::selection { background: rgba(37, 99, 235, 0.18); }
 
+/* small helper */
 .kbd {
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(2, 6, 23, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.03);
   padding: 0.15rem 0.35rem;
-  border-radius: 0.45rem;
+  border-radius: 0.5rem;
   font-size: 0.75rem;
-  color: rgba(226, 232, 240, 0.9);
+  color: rgba(15, 23, 42, 0.8);
 }
-
-.scrollbar-thin::-webkit-scrollbar { width: 10px; height: 10px; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 999px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.35); }
